@@ -61,36 +61,35 @@ void calculate(string path, Datetime full_date) {
 		istringstream iss(line);
 		iss >> curr_date;
 		curre_date = curr_date;
-			if (!is_found_date and ((10 * (curr_date[4] - 48) + (curr_date[5] - 48)) != full_date.month or
-				(10 * (curr_date[6] - 48) + (curr_date[7] - 48)) != full_date.day)) {
-				continue;
-			}
-			try {
-				my_row = make_row(iss, curre_date);
-				is_found_date = true;
-			}
-			catch (...) {
-				cout << curre_date << endl;
-				break;
-			}
+		if (!is_found_date and ((10 * (curr_date[4] - 48) + (curr_date[5] - 48)) != full_date.month or
+			(10 * (curr_date[6] - 48) + (curr_date[7] - 48)) != full_date.day)) {
+			continue;
+		}
+		try {
+			my_row = make_row(iss, curre_date);
+		}
+		catch (...) {
+			break;
+		}
+		is_found_date = true;
 
 
-			if (last_row.El < 0 and my_row.El >= 0) {
-				cout << "Восход луны:" << my_row.data << endl;
-			}
-			else if (last_row.El > 0 and my_row.El <= 0) {
-				cout << "Заход луны:" << my_row.data << endl;
-			}
-			if (max_El < my_row.El) {
-				date = my_row.data;
-				max_El = my_row.El;
-			}
-			last_row = my_row;
+		if (last_row.El < 0 and my_row.El >= 0) {
+			cout << "Восход луны:" << my_row.data << endl;
+		}
+		else if (last_row.El > 0 and my_row.El <= 0) {
+			cout << "Заход луны:" << my_row.data << endl;
+		}
+		if (max_El < my_row.El) {
+			date = my_row.data;
+			max_El = my_row.El;
+		}
+		last_row = my_row;
 
-			if (is_found_date and ((10 * (curr_date[6] - 48) + (curr_date[7] - 48)) != full_date.day or
-				(10 * (curr_date[4] - 48) + (curr_date[5] - 48)) != full_date.month)) {
-				break;
-			}
+		if (is_found_date and ((10 * (curr_date[6] - 48) + (curr_date[7] - 48)) != full_date.day or
+			(10 * (curr_date[4] - 48) + (curr_date[5] - 48)) != full_date.month)) {
+			break;
+		}
 	}
 	cout << "Кульминация Луны: " << date;
 	file.close();
