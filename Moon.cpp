@@ -16,15 +16,12 @@ void make_hms(Datetime& _date, char(&_HMS)[7]) {
 	_date.second = (_HMS[4] - 48) * 10 + (_HMS[5] - 48);
 }
 
-row make_row(istringstream& isstr, string& current_date) {
+void make_row(istringstream& isstr, string& current_date, row& result) {
 	char HMS[7];
-	row result;
 	result.data = Datetime(current_date);
 	isstr >> HMS >> result.El >> result.El >> result.El;
 
 	make_hms(result.data, HMS);
-	return result;
-
 }
 
 void calculate(string path, Datetime full_date) {
@@ -54,7 +51,7 @@ void calculate(string path, Datetime full_date) {
 	istringstream iss(line);
 	iss >> curr_date;
 	curre_date = curr_date;
-	last_row = make_row(iss, curre_date);
+	make_row(iss, curre_date, last_row);
 
 	while (true) {
 		file.getline(line, 100);
@@ -66,7 +63,7 @@ void calculate(string path, Datetime full_date) {
 			continue;
 		}
 		try {
-			my_row = make_row(iss, curre_date);
+			make_row(iss, curre_date, my_row);
 		}
 		catch (...) {
 			break;
