@@ -1,9 +1,8 @@
 ﻿#include <iostream>
-#include <vector>
-#include <string>
 #include "Date/DateTime.h"
 #include <fstream>
 #include <sstream>
+#include <string>
 using namespace std;
 
 struct row {
@@ -11,13 +10,13 @@ struct row {
 	double El;
 };
 
-void make_hms(Datetime& _date, char _HMS[7]) {
+void make_hms(Datetime& _date, char(&_HMS)[7]) {
 	_date.hour = (_HMS[0] - 48) * 10 + (_HMS[1] - 48);
 	_date.minute = (_HMS[2] - 48) * 10 + (_HMS[3] - 48);
 	_date.second = (_HMS[4] - 48) * 10 + (_HMS[5] - 48);
 }
 
-row make_row(istringstream& isstr, string current_date) {
+row make_row(istringstream& isstr, string& current_date) {
 	char HMS[7];
 	row result;
 	result.data = Datetime(current_date);
@@ -36,10 +35,12 @@ void calculate(string path, Datetime full_date) {
 
 	char line[100];
 
-	string curr_date;
+	char curr_date[9];
+	string curre_date;
+
+	row last_row;
 	row my_row;
-	vector<row> vect;
-	size_t ptr = 1;
+
 
 	bool is_found_date = false;
 	double max_El = -9999;
@@ -52,34 +53,36 @@ void calculate(string path, Datetime full_date) {
 
 	istringstream iss(line);
 	iss >> curr_date;
-	my_row = make_row(iss, curr_date);
-	vect.push_back(my_row);
+	curre_date = curr_date;
+	last_row = make_row(iss, curre_date);
 
 	while (true) {
 		file.getline(line, 100);
 		istringstream iss(line);
 		iss >> curr_date;
-		if (!is_found_date and (stoi(curr_date.substr(4, 2)) != full_date.month or stoi(curr_date.substr(6, 2)) != full_date.day)) {
+		curre_date = curr_date;
+		if (!is_found_date and ((10 * (curr_date[4] - 48) + (curr_date[5] - 48)) != full_date.month or
+								(10 * (curr_date[6] - 48) + (curr_date[7] - 48)) != full_date.day)) {
 			continue;
 		}
-		my_row = make_row(iss, curr_date);
+		my_row = make_row(iss, curre_date);
 		is_found_date = true;
 
-		vect.push_back(my_row);
 
-		if (vect[ptr - 1].El < 0 and vect[ptr].El >= 0) {
-			cout << "Восход луны:" << vect[ptr].data << endl;
+		if (last_row.El < 0 and my_row.El >= 0) {
+			cout << "Восход луны:" << my_row.data << endl;
 		}
-		else if (vect[ptr - 1].El > 0 and vect[ptr].El <= 0) {
-			cout << "Заход луны:" << vect[ptr].data << endl;
+		else if (last_row.El > 0 and my_row.El <= 0) {
+			cout << "Заход луны:" << my_row.data << endl;
 		}
-		if (max_El < vect[ptr].El) {
-			date = vect[ptr].data;
-			max_El = vect[ptr].El;
+		if (max_El < my_row.El) {
+			date = my_row.data;
+			max_El = my_row.El;
 		}
-		ptr++;
+		last_row = my_row;
 
-		if (is_found_date and (stoi(curr_date.substr(6, 2)) != full_date.day or stoi(curr_date.substr(4, 2)) != full_date.month)) {
+		if (is_found_date and ((10 * (curr_date[6] - 48) + (curr_date[7] - 48)) != full_date.day or 
+							   (10 * (curr_date[4] - 48) + (curr_date[5] - 48)) != full_date.month)) {
 			break;
 		}
 	}
@@ -91,7 +94,7 @@ int main() {
 	setlocale(LC_ALL, "ru-RU");
 	string path = "Moon/moon";
 
-	Datetime full_date(6, 3, 2023);
+	Datetime full_date(6, 2, 2023);
 	//try {
 	//	cin >> full_date; // day-month-year
 	//}
