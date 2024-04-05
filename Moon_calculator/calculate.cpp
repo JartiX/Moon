@@ -11,7 +11,6 @@ void calculate(string& path, Datetime& full_date) {
 		cerr << "Ошибка при чтении файла";
 	}
 
-	char line[100];
 
 	char curr_date[9];
 	char HMS[7];
@@ -26,26 +25,31 @@ void calculate(string& path, Datetime& full_date) {
 	answer_date = Datetime();
 	Datetime date;
 
-	file.getline(line, 100);
-	file.getline(line, 100);
+	file.ignore(numeric_limits<streamsize>::max(), '\n');
 
 	cout << "Дата: " << full_date << endl;
 
 	while (true) {
-		file.getline(line, 100);
-		istringstream iss(line);
-		iss >> curr_date;
+		file >> curr_date;
 		if ((10 * (curr_date[4] - 48) + (curr_date[5] - 48)) != full_date.month or
 			(10 * (curr_date[6] - 48) + (curr_date[7] - 48)) != full_date.day) {
+			file.ignore(numeric_limits<streamsize>::max(), '\n');
 			continue;
 		}
-		iss >> HMS >> last_El >> last_El >> last_El;
+		file >> HMS;
+		file.ignore(numeric_limits<streamsize>::max(), ' ');
+		file.ignore(numeric_limits<streamsize>::max(), ' ');
+		file >> last_El;
+		file.ignore(numeric_limits<streamsize>::max(), '\n');
+
 		break;
 	}
 	while (true) {
-		file.getline(line, 100);
-		istringstream isss(line);
-		isss >> curr_date >> HMS >> El >> El >> El;
+		file >> curr_date >> HMS;
+		file.ignore(numeric_limits<streamsize>::max(), ' ');
+		file.ignore(numeric_limits<streamsize>::max(), ' ');
+		file >> El;
+		file.ignore(numeric_limits<streamsize>::max(), '\n');
 
 		if (last_El < 0 and El >= 0) {
 			make_date(answer_date, HMS, curr_date);
