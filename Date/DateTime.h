@@ -45,5 +45,6 @@ public:
 	bool isDateValid();
 };
 
+void make_date(Datetime& _date, char(&_HMS)[7], char(&current_date)[9]);
 // Вычисление календарной даты по юлианской
 Datetime convert_date(double julian);

@@ -3,6 +3,15 @@
 #include <sstream>
 using namespace std;
 
+void make_date(Datetime& _date, char(&_HMS)[7], char(&current_date)[9]) {
+	_date.hour = (_HMS[0] - 48) * 10 + (_HMS[1] - 48);
+	_date.minute = (_HMS[2] - 48) * 10 + (_HMS[3] - 48);
+	_date.second = (_HMS[4] - 48) * 10 + (_HMS[5] - 48);
+	_date.year = 1000 * (current_date[0] - 48) + 100 * (current_date[1] - 48) + 10 * (current_date[2] - 48) + (current_date[3] - 48);
+	_date.day = 10 * (current_date[6] - 48) + (current_date[7] - 48);
+	_date.month = 10 * (current_date[4] - 48) + (current_date[5] - 48);
+}
+
 Datetime::Datetime(int _day, int _month, int _year) {
 	day = _day;
 	month = _month;
