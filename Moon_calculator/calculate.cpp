@@ -1,7 +1,6 @@
 #include <iostream>
 #include "calculate.h"
 #include <fstream>
-#include <sstream>
 using namespace std;
 
 
