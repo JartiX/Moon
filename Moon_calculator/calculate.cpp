@@ -10,15 +10,12 @@ void calculate(string& path, Datetime& full_date) {
 		cerr << "Ошибка при чтении файла";
 	}
 
-
 	char curr_date[9];
 	char HMS[7];
 
 	double last_El;
 	double El;
 	double max_El = -9999;
-
-
 
 	Datetime answer_date;
 	answer_date = Datetime();
