@@ -36,19 +36,13 @@ void calculate(string& path, Datetime& full_date) {
 			file.ignore(numeric_limits<streamsize>::max(), '\n');
 			continue;
 		}
-		file >> HMS;
-		file.ignore(numeric_limits<streamsize>::max(), ' ');
-		file.ignore(numeric_limits<streamsize>::max(), ' ');
-		file >> last_El;
+		file >> HMS >> last_El >> last_El >> last_El;
 		file.ignore(numeric_limits<streamsize>::max(), '\n');
 
 		break;
 	}
 	while (true) {
-		file >> curr_date >> HMS;
-		file.ignore(numeric_limits<streamsize>::max(), ' ');
-		file.ignore(numeric_limits<streamsize>::max(), ' ');
-		file >> El;
+		file >> curr_date >> HMS >> El >> El >> El;
 		file.ignore(numeric_limits<streamsize>::max(), '\n');
 
 		if (last_El < 0 and El >= 0) {
